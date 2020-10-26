@@ -1,0 +1,13 @@
+#cloud-config
+rancher:
+write_files:
+  - path: /etc/rc.local
+    permissions: "0755"
+    owner: root
+    content: |
+      #!/bin/bash
+      wait-for-docker
+      wget -O /usr/bin/cm https://github.com/aerokube/cm/releases/download/1.7.1/cm_linux_amd64 
+      chmod +x /usr/bin/cm
+      /usr/bin/cm selenoid start --browsers '${browsers}' --last-versions 1 --args "-limit ${limit}"
+      /usr/bin/cm selenoid-ui start
